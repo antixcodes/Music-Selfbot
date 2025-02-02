@@ -1,0 +1,6 @@
+{
+    "host": "lavalink.alfari.id",
+    "port": 443,
+    "password": "catfein",
+    "https": true
+}  
