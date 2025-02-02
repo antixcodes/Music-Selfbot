@@ -148,7 +148,7 @@ async def on_message(message):
 
         elif message.content.startswith(f"{prefix}help"):
                     await message.reply(f"""
-        > # Shadow Music Selfbot Cmds
+        > # Shadow Music Cmds
         > 
         > {prefix}play [song-name]
         > {prefix}queue
