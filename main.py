@@ -34,13 +34,22 @@ async def on_ready():
 
 
 queues = {}
-looping = {}
 
 @bot.event
 async def on_message(message):
     if not message.guild:
         return        
     if message.author.id == owner:
+        if message.content.startswith(f"{prefix}join"):
+            if message.author.voice:
+                channel = message.author.voice.channel
+                await channel.connect()
+                await message.channel.send(f'Joined!')
+            else:
+                await message.channel.send('You are not connected to a voice channel!')
+        if message.content.startswith(f"{prefix}ping"):
+            latency = bot.latency * 1000
+            await message.channel.send(f'Latency : {latency:.2f}ms')
         if message.content.startswith(f"{prefix}play"):
             query = message.content[len(f"{prefix}play "):]
             player = message.guild.voice_client
@@ -156,24 +165,11 @@ async def on_message(message):
         > {prefix}stop
         > {prefix}skip
         > {prefix}volume [int]
-        > {prefix}loop
+        > {prefix}ping
+        > {prefix}join
         """)
     else:
         return            
     await bot.process_commands(message)
-
-@bot.event
-async def on_wavelink_track_end(player, track, reason):
-    guild_id = player.guild.id
-    if guild_id not in looping:
-        return
-
-    if looping[guild_id] == 'track':
-        await player.play(track)
-
-    elif looping[guild_id] == 'queue' and queues.get(guild_id):
-        queues[guild_id].append(track)
-        next_track = queues[guild_id].pop(0)
-        await player.play(next_track)
 
 bot.run(token)
